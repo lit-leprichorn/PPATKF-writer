@@ -1,13 +1,21 @@
 # the stuff to encode and decode bro.
 from letter_map import CharMap
 rev_CharMap = {v:k for k, v in CharMap.items()} 
-    
+import os,random
 # flips the map by assigning char1 and char2 to v and k     
 # then, flip k and v's positions in the list 😲✅🔥🔥
 
 def encode(text):
     encoded = ""
     for char in text:
+        pad = os.urandom(2).hex()
+        hexed = int(pad,16)
+        cap = hexed % 7
+        random.seed(hexed)
+        randnum = random.randint(0,100)
+        if randnum < 50:
+            for i in range(cap):
+                encoded += os.urandom(2).hex()
         encoded += CharMap.get(char, char)
     return encoded
 
@@ -15,7 +23,8 @@ def decode(Etext):
     decoded = ""
     for i in range(0, len(Etext), 4): # start at 0, stop at end of Etext and jump in 4 char jumps!
         block = Etext[i:i + 4]
-        decoded += rev_CharMap.get(block,"NULL") # four bit character to show something is missing!!!
+        if block in rev_CharMap:
+            decoded += rev_CharMap.get(block,"NULL") # four bit character to show something is missing!!!
     return decoded
 # now the main code stuff.*insert funny comment here* hahah! (stfu comment...)
 
